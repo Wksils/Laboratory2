@@ -2,9 +2,9 @@
 
 abstract class Pair
 {
-    public abstract double Plus();
-    public abstract double Minus();
-    public abstract double Multiply();
+    public abstract Pair Plus(Pair pair);
+    public abstract Pair Minus(Pair pair);
+    public abstract Pair Multiply(Pair pair);
 }
 class FazzyNumber : Pair
 {
@@ -19,22 +19,50 @@ class FazzyNumber : Pair
         this.e2 = e2;
     }
 
-    public override FazzyNumber Minus()
+    public override Pair Plus(Pair pair)
     {
-        //double x = fazzy.x - number.x - fazzy.e1 - number.e1;
-        //double e1 = fazzy.x - number.x;
-        //double e2 = fazzy.x - number.x + fazzy.e2 + number.e2;
-        //return new FazzyNumber(x, e1, e2);
+        double e1=this.x+(pair as FazzyNumber)!.x-this.e1-(pair as FazzyNumber)!.e1;
+        double e2 = this.x + (pair as FazzyNumber)!.x;
+        double e3 = this.x + (pair as FazzyNumber)!.x + this.e2 + (pair as FazzyNumber)!.e2;
+        return new FazzyNumber(e1,e2,e3) as Pair;
     }
 
-    public override double Multiply()
+    public override Pair Minus(Pair pair)
     {
-        throw new NotImplementedException();
+        double e1 = this.x - (pair as FazzyNumber)!.x - this.e1 - (pair as FazzyNumber)!.e1;
+        double e2 = this.x - (pair as FazzyNumber)!.x;
+        double e3 = this.x - (pair as FazzyNumber)!.x + this.e2 + (pair as FazzyNumber)!.e2;
+        return new FazzyNumber(e1, e2, e3) as Pair;
     }
 
-    public override double Plus()
+    public override Pair Multiply(Pair pair)
     {
-        throw new NotImplementedException();
+        double e1 = this.x * (pair as FazzyNumber)!.x - (pair as FazzyNumber)!.x * this.e1 - this.x * (pair as FazzyNumber)!.e1 + this.e1 * (pair as FazzyNumber)!.e1;
+        double e2 = this.x * (pair as FazzyNumber)!.x;
+        double e3 = this.x * (pair as FazzyNumber)!.x + (pair as FazzyNumber)!.x * this.e1 + this.x * (pair as FazzyNumber)!.e1 + this.e1 * (pair as FazzyNumber)!.e1;
+        return new FazzyNumber(e1, e2, e3) as Pair;
+    }
+    public FazzyNumber Return()
+    {
+        if (this.x > 0)
+        {
+            double e1 = 1 / (this.x + this.e2);
+            double e2 = 1 / this.x;
+            double e3 = 1 / (this.x - this.e1);
+            return new FazzyNumber(e1, e2, e3);
+        }
+        else return new FazzyNumber(0,0, 0);
+    }
+    public FazzyNumber Division(FazzyNumber number)
+    {
+        if (number.x > 0)
+        {
+            double e1 = (this.x - this.e1)/(number.x - number.e2);
+            double e2 = this.x / number.x;
+            double e3 = (this.x - this.e2)/(number.x - number.e1);
+            return new FazzyNumber(e1,e2,e3);
+        }
+        else return new FazzyNumber(0, 0, 0);
     }
 }
 class Fraction : Pair
@@ -44,17 +72,17 @@ class Fraction : Pair
     {
     }
 
-    public override double Minus()
+    public override Pair Minus()
     {
         throw new NotImplementedException();
     }
 
-    public override double Multiply()
+    public override Pair Multiply()
     {
         throw new NotImplementedException();
     }
 
-    public override double Plus()
+    public override Pair Plus()
     {
         throw new NotImplementedException();
     }
